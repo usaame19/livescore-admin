@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useGetLeagues } from "../../../../../hooks/getAllApi";
 import { API } from "../../../../../lib/config";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -23,11 +23,37 @@ const API_URL = `${API}/groups/create-group`;
 export default function CreateNewGroup() {
   const [groupName, setGroupName] = useState("");
   const [selectedLeagueId, setSelectedLeagueId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { data: leagues, isLoading: loadingLeagues } = useGetLeagues();
 
   const queryClient = useQueryClient();
   const navigation = useNavigation();
+  const route = useRoute();
+  const { groupId } = route.params || {};
 
+  useEffect(() => {
+    if (groupId) {
+      setIsLoading(true);
+      const url = `${API}/groups/get-group/${groupId}`;
+      console.log('url', url);
+      axios
+        .get(`${API}/groups/get-group/${groupId}`)
+        .then((response) => {
+          const { name, leagueId } = response.data.group;
+          console.log('object', name, leagueId)
+          setGroupName(name);
+          setSelectedLeagueId(leagueId);
+        })
+
+        .catch((error) => {
+          Toast.show({
+            type: "error",
+            text1: "Failed to load group details",
+          });
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [groupId]);
   // Handling league selection changes
   const onLeagueChange = (itemValue) => {
     setSelectedLeagueId(itemValue);
@@ -39,7 +65,7 @@ export default function CreateNewGroup() {
   );
 
   const handleSubmit = async () => {
-    if (groupName.length === 0 || !selectedLeagueId ) {
+    if (groupName.length === 0 || !selectedLeagueId) {
       Toast.show({
         type: "error",
         text1: "Validation Error",
@@ -52,27 +78,29 @@ export default function CreateNewGroup() {
         name: groupName,
         leagueId: selectedLeagueId,
       };
-      console.log("groupData", groupData);
-      
+      const method = groupId ? "PATCH" : "POST";
+      const url = groupId
+        ? `${API}/groups/update-group/${groupId}`
+        : `${API}/groups/create-group`;
+      await axios({ method, url, data: groupData });
 
-      await axios.post(API_URL, groupData);
-      queryClient.invalidateQueries({ queryKey: ["Groups"] });
-
-      setGroupName("");
-      setSelectedLeagueId("");
-      navigation.navigate("AddGroup");
-
+      queryClient.invalidateQueries(["Groups"]);
+      navigation.goBack();
       Toast.show({
         type: "success",
-        text1: "Group created successfully",
-        text2: `${groupData.name} has been added.`,
+        text1: groupId
+          ? "Group updated successfully"
+          : "Group created successfully",
       });
     } catch (error) {
+      console.error('Error submitting group:', error.response ? error.response.data : error.message);
       Toast.show({
         type: "error",
-        text1: "Error creating group",
-        text2: "Something went wrong, please try again.",
+        text1: error.response ? error.response.data : error.message,
+        text2: error.response ? error.response.data.message : "Something went wrong, please try again.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   const LeagueOptions = leagues?.map((league) => ({
@@ -153,7 +181,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 20,
-    marginTop: 10
+    marginTop: 10,
   },
   submitButton: {
     backgroundColor: "#28a745", // Use a distinct color for the submit action

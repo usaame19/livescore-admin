@@ -95,6 +95,7 @@ const CreateNewLeague = () => {
           : "League created successfully",
       });
     } catch (error) {
+      console.error('Error while creating league', error);
       Toast.show({
         type: "error",
         text1: "Failed to submit league",

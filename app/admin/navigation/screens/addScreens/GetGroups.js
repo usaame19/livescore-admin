@@ -114,8 +114,8 @@ export default function GetGroupScreen({ navigation }) {
       <Text style={styles.cell}>{item.teams.length}</Text>
       <View style={styles.actionsCell}>
         <TouchableHighlight
-          onPress={() => console.log("Update", item.id)}
-          style={styles.actionButton}
+            onPress={() =>navigation.navigate("CreateNewGroup", { groupId: item.id })}
+            style={styles.actionButton}
         >
           <Icon name="edit" size={20} color="#4CAF50" />
         </TouchableHighlight>

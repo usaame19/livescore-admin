@@ -15,12 +15,12 @@ const add = "Add";
 const settingsName = "Settings";
 const matchesName = "Matches";
 import AddStack from "./AddStack";
+import LoginScreen from "./screens/components/loging/LoginScreen";
 
 const Tab = createBottomTabNavigator();
 
 function AdminNav() {
   return (
-    <NavigationContainer>
       <Tab.Navigator
   initialRouteName={homeName}
   screenOptions={({ route }) => ({
@@ -86,9 +86,8 @@ function AdminNav() {
         fontWeight: "bold",
       },
     }}/>
+    
 </Tab.Navigator>
-
-    </NavigationContainer>
   );
 }
 
