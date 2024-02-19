@@ -138,122 +138,132 @@ const AddStack = () => {
           },
         })}
       />
-      <Stack.Screen name="CreateNewLeague" component={CreateNewLeague}
-      options={({ navigation }) => ({
-        headerShown: true,
-        headerTitle: "Create New League",
-        headerStyle: {
-          backgroundColor: "#64748b",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginLeft: 15 }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
-        headerBackTitleVisible: false,
-      })} 
-      />
-      <Stack.Screen name="CreateNewTeam" component={CreateNewTeam}
-      options={({ navigation }) => ({
-        headerShown: true,
-        headerTitle: "Create New Team",
-        headerStyle: {
-          backgroundColor: "#64748b",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginLeft: 15 }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
-        headerBackTitleVisible: false,
-      })} 
-      />
-      <Stack.Screen name="CreateNewGroup" component={CreateNewGroup}
-      options={({ navigation }) => ({
-        headerShown: true,
-        headerTitle: "Create New Group",
-        headerStyle: {
-          backgroundColor: "#64748b",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginLeft: 15 }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
-        headerBackTitleVisible: false,
-      })} 
-      />
-      <Stack.Screen name="CreateNewPlayer" component={CreateNewPlayer}
-      options={({ navigation }) => ({
-        headerShown: true,
-        headerTitle: "Create New Player",
-        headerStyle: {
-          backgroundColor: "#64748b",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginLeft: 15 }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
-        headerBackTitleVisible: false,
-      })} 
-      />
-
-      <Stack.Screen name="LeagueDetailsScreen" component={LeagueDetailsScreen}
-      options={({ navigation }) => ({
-        headerShown: true,
-        headerTitle: "League Details",
-        headerStyle: {
-          backgroundColor: "#64748b",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginLeft: 15 }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-        ),
-        headerBackTitleVisible: false,
-      })} 
+      <Stack.Screen
+        name="CreateNewLeague"
+        component={CreateNewLeague}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "Create New League",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
       />
       <Stack.Screen
-  name="LeagueDetails"
-  component={LeagueDetailsTabs}
-  options={{ headerTitle: 'League Details' }}
-/>
+        name="CreateNewTeam"
+        component={CreateNewTeam}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "Create New Team",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="CreateNewGroup"
+        component={CreateNewGroup}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "Create New Group",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="CreateNewPlayer"
+        component={CreateNewPlayer}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "Create New Player",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
+      />
+
+      <Stack.Screen
+        name="LeagueDetailsScreen"
+        component={LeagueDetailsScreen}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "League Details",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="LeagueDetails"
+        component={LeagueDetailsTabs}
+        options={{ headerTitle: "League Details" }}
+      />
     </Stack.Navigator>
   );
 };

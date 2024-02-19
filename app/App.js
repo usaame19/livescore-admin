@@ -5,8 +5,11 @@ import Toast, { BaseToast } from "react-native-toast-message";
 import LoginScreen from "./admin/navigation/screens/components/loging/LoginScreen";
 import { UserProvider } from "./hooks/UserContext";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { CommonActions } from '@react-navigation/native';
+
 
 const queryClient = new QueryClient();
 const toastConfig = {
@@ -45,14 +48,18 @@ const toastConfig = {
 };
 
 const LoginNav = () => {
-const Stack = createStackNavigator();
+  const Stack = createStackNavigator();
 
   return (
     // Add return statement
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name="Login" component={LoginScreen}  options={{ headerShown: false, headerTitle: "" }}/>
       <Stack.Screen
-        name="AdminNav"
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false, headerTitle: "" }}
+      />
+      <Stack.Screen
+        name="AdmimNav"
         component={AdminNav}
         options={{ headerShown: false, headerTitle: "" }}
       />
@@ -62,13 +69,13 @@ const Stack = createStackNavigator();
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+
   async function getData() {
     const data = await AsyncStorage.getItem("isLoggedIn");
     console.log("data at app:", data);
     setIsLoggedIn(data === "true"); // Convert string to boolean
   }
-  
+
   useEffect(() => {
     getData();
   }, []);
@@ -76,10 +83,10 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <UserProvider>
-        <NavigationContainer>
-          {isLoggedIn ? <AdminNav /> : <LoginNav />}
-        </NavigationContainer>
-        <Toast config={toastConfig} position="top" />
+          <NavigationContainer>
+            {isLoggedIn ? <AdminNav /> : <LoginNav />}
+          </NavigationContainer>
+          <Toast config={toastConfig} position="top" />
         </UserProvider>
       </QueryClientProvider>
     </>
@@ -87,3 +94,49 @@ function App() {
 }
 
 export default App;
+
+export const LogOutScreen = () => {
+
+  const navigation = useNavigation();
+
+  const handleLogOut = async () => {
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("isLoggedIn");
+  
+    // Reset the navigation state to the login flow
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Login' },
+        ],
+      })
+    );
+  
+    Toast.show({
+      type: "success",
+      text1: "Logged out successfully",
+    });
+  };
+  return (
+    <TouchableOpacity style={styles.logout} onPress={handleLogOut}>
+      <Text style={styles.logoutText}>Log Out</Text>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  logout: {
+    backgroundColor: "red",
+    width: "100%",
+    padding: 15,
+    alignItems: "center",
+    borderRadius: 5,
+    marginTop: 30,
+  },
+  logoutText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "500",
+  },
+});

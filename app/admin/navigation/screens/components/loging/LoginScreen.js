@@ -14,6 +14,7 @@ import axios from "axios";
 import { API } from "../../../../../lib/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -55,10 +56,14 @@ const LoginScreen = () => {
     try {
       const userData = { email, password };
       const response = await axios.post(`${API}/users/login-user`, userData);
-      Alert.alert("Login Successful");
+      // Alert.alert("Login Successful");
+      Toast.show({
+        type: "success",
+        text1: "Login Successful"
+      });
       await AsyncStorage.setItem("token", response.data.data);
       await AsyncStorage.setItem("isLoggedIn", JSON.stringify(true));
-      navigation.navigate("home");
+      navigation.navigate("AdmimNav");
     } catch (err) {
       setError(
          err.response.data.message
@@ -74,7 +79,6 @@ const LoginScreen = () => {
         source={require("../../../../../../assets/umma_logo.jpeg")}
         style={styles.logo}
       />
-      <Text style={styles.title}>Login</Text>
 
       <View style={styles.inputContainer}>
         <Icon name="envelope" size={20} color="#000" style={styles.inputIcon} />
