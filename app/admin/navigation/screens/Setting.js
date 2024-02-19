@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -58,8 +59,8 @@ const Settings = () => {
     };
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.header}>Personal Information</Text>
+      <ScrollView style={{flex: 1}} contentContainerStyle={styles.container}>
+      <Text style={styles.header}>Personal Information</Text>
         <View style={styles.inputGroup}>
           <Icon name="account" size={20} style={styles.icon} />
           <TextInput
@@ -124,7 +125,7 @@ const Settings = () => {
           <Text style={styles.buttonText}>Change Password</Text>
         </TouchableOpacity>
         <LogOutScreen />
-      </View>
+      </ScrollView>
     );
   }
 const styles = StyleSheet.create({
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     backgroundColor: "#F5F5F5",
+    flexGrow: 1
   },
   header: {
     alignSelf: "flex-start",

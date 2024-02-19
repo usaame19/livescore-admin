@@ -19,6 +19,7 @@ import CreateNewTeam from "./screens/components/team/CreateNewTeam";
 import CreateNewPlayer from "./screens/components/player/CreateNewPlayer";
 import LeagueDetailsTabs from "./league/LeagueDetailsTabs";
 import LeagueDetailsScreen from "./screens/components/league/LeagueDetailsScreen";
+import ForgotPasswordScreen from "./screens/components/loging/forgotScreens/forgotPassword";
 
 const Stack = createStackNavigator();
 
@@ -263,6 +264,11 @@ const AddStack = () => {
         name="LeagueDetails"
         component={LeagueDetailsTabs}
         options={{ headerTitle: "League Details" }}
+      />
+      <Stack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+        options={{ headerTitle: "FORGOT PASSWORD" }}
       />
     </Stack.Navigator>
   );

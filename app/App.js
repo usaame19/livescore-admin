@@ -9,6 +9,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { CommonActions } from '@react-navigation/native';
+import LoginNavigation from "./admin/navigation/screens/components/loging/LoginNavigation";
 
 
 const queryClient = new QueryClient();
@@ -55,7 +56,7 @@ const LoginNav = () => {
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="Login"
-        component={LoginScreen}
+        component={LoginNavigation}
         options={{ headerShown: false, headerTitle: "" }}
       />
       <Stack.Screen

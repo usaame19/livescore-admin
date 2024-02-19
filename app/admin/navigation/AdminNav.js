@@ -16,6 +16,7 @@ const settingsName = "Settings";
 const matchesName = "Matches";
 import AddStack from "./AddStack";
 import LoginScreen from "./screens/components/loging/LoginScreen";
+import LoginNavigation from "./screens/components/loging/LoginNavigation";
 
 const Tab = createBottomTabNavigator();
 
