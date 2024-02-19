@@ -8,30 +8,33 @@ import {
   StyleSheet,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { API } from "../../../../../../lib/config";
 import axios from "axios";
 
 const TokenVerificationScreen = () => {
-    const route= useRoute()
-    const { email } = route.params;    
-    console.log('email', email)
   const [token, setToken] = useState("");
-  console.log('token', token)
-  const [timer, setTimer] = useState(120);
-  const navigation = useNavigation()
+  const [loading, setLoading] = useState(false); // New loading state
+  const route = useRoute();
+  const { email } = route.params;
+  const navigation = useNavigation();
 
-  const handleSubmit = ()=>{
-    axios.post(`${API}/users/check-token`, {email, token}).then(res =>{
-        if(res.data.status === true){
-            Alert.alert('code is correct')
-            navigation.navigate('passwordRecovery', {token, email}
-            )
-        }else{
-            console.log('something is wrong')
-        }
-    })
-  }
+  const handleSubmit = () => {
+    setLoading(true); // Start loading
+
+    axios.post(`${API}/users/check-token`, { email, token }).then((res) => {
+      setLoading(false); // Stop loading on response
+      if (res.data.status === true) {
+        
+        Alert.alert("code is correct");
+        navigation.navigate("passwordRecovery", { token, email });
+      } else {
+        console.log("something is wrong");
+      }
+    });
+    navigation.navigate("passwordRecovery", { token, email });
+  };
 
   return (
     <View style={styles.container}>
@@ -50,14 +53,27 @@ const TokenVerificationScreen = () => {
         keyboardType="numeric"
         autoFocus
       />
-      <Text style={styles.timer}>
-        The code will expire after 1 hour
-      </Text>
+      <Text style={styles.timer}>The code will expire after 1 hour</Text>
       <TouchableOpacity style={styles.resendButton}>
         <Text style={styles.resendButtonText}>Don't receive code? Re-send</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSubmit}
+        disabled={loading}
+      >
+        {loading ? (
+          <View style={styles.buttonLoading}>
+            <Text style={styles.buttonText}>Checking...</Text>
+            <ActivityIndicator
+              style={styles.indicator}
+              size="small"
+              color="#fff"
+            />
+          </View>
+        ) : (
+          <Text style={styles.buttonText}>Check Code</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -92,10 +108,10 @@ const styles = StyleSheet.create({
     width: 200, // Adjust the width as needed
     height: 45,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: "#000",
     padding: 10,
     marginRight: 10,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
     borderRadius: 5,
     fontSize: 18,
@@ -106,9 +122,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 20,
   },
-  timer: {
-    fontSize: 18,
-    marginBottom: 20,
+  buttonLoading: {
+    flexDirection: "row",
+  },
+  indicator: {
+    marginHorizontal: 10,
   },
   resendButton: {
     marginBottom: 20,
@@ -127,6 +145,19 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     textAlign: "center",
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    width: "100%",
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
