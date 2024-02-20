@@ -36,6 +36,14 @@ export const useGetPlayers = () => {
   return { data, isLoading, isError };
 };
 
+export const useGetUsers = () => {
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ['Users'],
+    queryFn: () => axios.get(`${API}/users/get-users`).then((res) => res.data.users),
+  });
+  return { data, isLoading, isError };
+};
+
 export const useGetLeagueById = (leagueId) => {
   return useQuery({
     queryKey: ['League', leagueId],

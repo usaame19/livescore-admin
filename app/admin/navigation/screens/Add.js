@@ -16,6 +16,7 @@ const Add = () => {
     { title: 'Add Player', screen: 'AddPlayer', backgroundColor: '#64748b' },
     { title: 'Add Match', screen: 'AddMatch', backgroundColor: '#64748b' },
     { title: 'Add Points', screen: 'AddPoints', backgroundColor: '#64748b' },
+    { title: 'Add Users', screen: 'AddUser', backgroundColor: '#64748b' },
   ];
 
   return (

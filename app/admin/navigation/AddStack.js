@@ -20,6 +20,8 @@ import CreateNewPlayer from "./screens/components/player/CreateNewPlayer";
 import LeagueDetailsTabs from "./league/LeagueDetailsTabs";
 import LeagueDetailsScreen from "./screens/components/league/LeagueDetailsScreen";
 import ForgotPasswordScreen from "./screens/components/loging/forgotScreens/forgotPassword";
+import CreateNewUser from "./screens/components/users/CreateNewUser";
+import GetUsersScreen from "./screens/addScreens/GetUsers";
 
 const Stack = createStackNavigator();
 
@@ -140,6 +142,30 @@ const AddStack = () => {
         })}
       />
       <Stack.Screen
+        name="AddUser"
+        component={GetUsersScreen}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "User",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        })}
+      />
+      <Stack.Screen
         name="CreateNewLeague"
         component={CreateNewLeague}
         options={({ navigation }) => ({
@@ -217,6 +243,30 @@ const AddStack = () => {
         options={({ navigation }) => ({
           headerShown: true,
           headerTitle: "Create New Player",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="CreateNewUser"
+        component={CreateNewUser}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "Create New user",
           headerStyle: {
             backgroundColor: "#64748b",
           },
