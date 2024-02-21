@@ -1,33 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
-  Button,
-  StyleSheet,
-  Platform,
   TouchableOpacity,
-  ActivityIndicator,
+  StyleSheet,
 } from "react-native";
-
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { API } from "../../../../../lib/config";
 
-const API_URL = `${API}/users/register-user`;
+const API_URL = `${API}/users`;
 
 export default function CreateNewUser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const queryClient = useQueryClient();
   const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params || {};
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (userId) {
+        setIsUpdateMode(true);
+        try {
+          const response = await axios.get(`${API_URL}/get-user/${userId}`);
+          const { name, email } = response.data.user;
+          setName(name);
+          setEmail(email);
+          // Password is not fetched for security reasons
+        } catch (error) {
+          Toast.show({
+            type: "error",
+            text1: "Failed to load user details",
+          });
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, [userId]);
 
   const handleSubmit = async () => {
-
     const isValidEmail = (email) => {
       const re = /\S+@\S+\.\S+/;
       return re.test(email);
@@ -39,14 +59,24 @@ export default function CreateNewUser() {
       return name.length >= 5;
     };
 
-    
-    if (!name || !email || !password) {
-      Toast.show({
-        type: "error",
-        text1: "Validation Error",
-        text2: "Please fill in all fields.",
-      });
-      return;
+    if (userId) {
+      if (!name || !email) {
+        Toast.show({
+          type: "error",
+          text1: "Validation Error",
+          text2: "Please fill in all fields.",
+        });
+        return;
+      }
+    } else {
+      if (!name || !email || !password) {
+        Toast.show({
+          type: "error",
+          text1: "Validation Error",
+          text2: "Please fill in all fields.",
+        });
+        return;
+      }
     }
     if (!isValidName(name)) {
       Toast.show({
@@ -62,50 +92,52 @@ export default function CreateNewUser() {
       });
       return;
     }
+    if(!userId){
     if (!isValidPassword(password)) {
       Toast.show({
         type: "error",
         text1: "password must be at least 8 characters long.",
       });
       return;
-    }
+    }}
 
     const userData = {
       name,
       email,
-      password,
-      resetToken: '',
-      resetTokenExpiry: '',
+      ...(isUpdateMode ? {} : { password }), // Only include password when not updating
     };
-    console.log("user data", userData);
 
     try {
-      await axios.post(API_URL, userData);
+      const method = isUpdateMode ? "PATCH" : "POST";
+      const url = isUpdateMode
+        ? `${API_URL}/update-user/${userId}`
+        : `${API_URL}/register-user`;
+
+      await axios({ method, url, data: userData });
       queryClient.invalidateQueries({ queryKey: ["Users"] });
 
-      // Reset form
-      setName("");
-      setEmail("");
-      setPassword("");
+      // Reset form if creating a new user
+      if (!isUpdateMode) {
+        setName("");
+        setEmail("");
+        setPassword("");
+      }
       navigation.navigate("AddUser");
 
       Toast.show({
         type: "success",
-        text1: "User created successfully",
-        text2: `${userData.name} has been added.`,
+        text1: isUpdateMode
+          ? "User updated successfully"
+          : "User created successfully",
       });
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Error creating user",
-        text2: "Something went wrong, please try again.",
+        text1: error.response.data.message,
+        text2: "please try again.",
       });
     }
   };
-  
- 
-
-
 
   return (
     <View style={styles.container}>
@@ -122,18 +154,19 @@ export default function CreateNewUser() {
         onChangeText={setEmail}
         keyboardType="email-address"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter User Password"
-        value={password}
-        onChangeText={setPassword}
-        keyboardType="visible-password"
-        secureTextEntry
-      />
-      
-      
+      {!isUpdateMode && (
+        <TextInput
+          style={styles.input}
+          placeholder="Enter User Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+      )}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Create New User</Text>
+        <Text style={styles.submitButtonText}>
+          {isUpdateMode ? "Update User" : "Create New User"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -173,7 +206,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 20,
-    marginTop: 10
+    marginTop: 10,
   },
   submitButton: {
     backgroundColor: "#28a745", // Use a distinct color for the submit action
