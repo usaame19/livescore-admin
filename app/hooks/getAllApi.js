@@ -43,6 +43,15 @@ export const useGetUsers = () => {
   });
   return { data, isLoading, isError };
 };
+export const useGetMatches = () => {
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ['Matches'],
+    queryFn: () => axios.get(`${API}/matches/get-matches`).then((res) => res.data),
+    
+  });
+  console.log('data from query', data)
+  return { data, isLoading, isError };
+};
 
 export const useGetLeagueById = (leagueId) => {
   return useQuery({

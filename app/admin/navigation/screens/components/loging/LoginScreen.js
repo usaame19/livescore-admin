@@ -15,13 +15,26 @@ import { API } from "../../../../../lib/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
+import axiosRetry from "axios-retry"; 
+
+axiosRetry(axios, {
+  retries: 3, // Number of retry attempts
+  retryDelay: (retryCount) => {
+    return axiosRetry.exponentialDelay(retryCount);
+  },
+  // This function defines when to retry, customize according to your needs
+  retryCondition: (error) => {
+    // Retry on network errors or 5xx status codes
+    return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.code === 'ECONNABORTED';
+  },
+});
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // New loading state
-
   const navigation = useNavigation();
 
   const isValidEmail = (email) => {
@@ -32,46 +45,51 @@ const LoginScreen = () => {
     return password.length >= 8;
   };
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setError("");
-    setLoading(true); // Start loading
-
+    setLoading(true);
+  
     if (!email || !password) {
       setError("Please fill in both email and password.");
-      setLoading(false); // Stop loading if validation fails
+      setLoading(false);
       return;
     }
-
+  
     if (!isValidEmail(email)) {
       setError("Please enter a valid email address.");
-      setLoading(false); // Stop loading if validation fails
+      setLoading(false);
       return;
     }
+  
     if (!isValidPassword(password)) {
-      setError("password must be at least 8 characters long.");
-      setLoading(false); // Stop loading if validation fails
+      setError("Password must be at least 8 characters long.");
+      setLoading(false);
       return;
     }
-
-    try {
-      const userData = { email, password };
-      const response = await axios.post(`${API}/users/login-user`, userData);
-      // Alert.alert("Login Successful");
-      Toast.show({
-        type: "success",
-        text1: "Login Successful"
-      });
+  
+    const userData = { email, password };
+    axios.post(`${API}/users/login-user`, userData,
+    console.log("post call passed"), {
+      timeout: 5000
+    }
+    
+    )
+    
+    .then(async (response) => {
       await AsyncStorage.setItem("token", response.data.data);
       await AsyncStorage.setItem("isLoggedIn", JSON.stringify(true));
       navigation.navigate("AdmimNav");
-    } catch (err) {
-      setError(
-         err.response.data.message
-      );
-    } finally {
-      setLoading(false); // Stop loading after request
-    }
+    })
+    .catch((err) => {
+      console.log('Axios error:', err.message);
+      setError(err.response?.data?.message || "An unexpected error occurred.");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   };
+  
+  
 
   return (
     <View style={styles.container}>

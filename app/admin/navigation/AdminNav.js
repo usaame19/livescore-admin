@@ -69,7 +69,7 @@ function AdminNav() {
         name={matchesName}
         component={Matches}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitle: "",
           headerStyle: {
             backgroundColor: "#64748b", // Set your desired color

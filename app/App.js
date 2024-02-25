@@ -45,7 +45,6 @@ const toastConfig = {
       }}
     />
   ),
-  // You can define other types similarly (error, info, etc.)
 };
 
 const LoginNav = () => {
@@ -105,15 +104,7 @@ export const LogOutScreen = () => {
     await AsyncStorage.removeItem("isLoggedIn");
   
     // Reset the navigation state to the login flow
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: 'Login' },
-        ],
-      })
-    );
-  
+   navigation.navigate('Login');
     Toast.show({
       type: "success",
       text1: "Logged out successfully",
