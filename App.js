@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import AdminNav from "./admin/navigation/AdminNav";
+import AdminNav from "./app/admin/navigation/AdminNav";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Toast, { BaseToast } from "react-native-toast-message";
-import LoginScreen from "./admin/navigation/screens/components/loging/LoginScreen";
-import { UserProvider } from "./hooks/UserContext";
+import LoginScreen from "./app/admin/navigation/screens/components/loging/LoginScreen";
+import { UserProvider } from "./app/hooks/UserContext";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { CommonActions } from '@react-navigation/native';
-import LoginNavigation from "./admin/navigation/screens/components/loging/LoginNavigation";
+import LoginNavigation from "./app/admin/navigation/screens/components/loging/LoginNavigation";
 
 
 const queryClient = new QueryClient();

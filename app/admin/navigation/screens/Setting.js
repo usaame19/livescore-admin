@@ -14,7 +14,7 @@ import { useUserContext } from "../../../hooks/UserContext";
 import axios from "axios";
 import { API } from "../../../lib/config";
 import Toast from "react-native-toast-message";
-import { LogOutScreen } from "../../../App";
+import { LogOutScreen } from "../../../../App";
 
 const Settings = () => {
   const [name, setName] = useState("");
