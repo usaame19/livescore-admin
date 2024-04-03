@@ -19,7 +19,6 @@ import Toast from "react-native-toast-message";
 
 export default function GetTeams({ navigation }) {
   const { data: teams, isLoading } = useGetTeams();
-  console.log("data", teams);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTeams, setFilteredTeams] = useState([]);
   const queryClient = useQueryClient();

@@ -2,11 +2,12 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 // Screens
 import HomeScreen from "./screens/HomeScreen";
 import Settings from "./screens/Setting";
-import Add from "./screens/Add";
 import Matches from "./screens/Matches";
 
 //Screen names
@@ -15,8 +16,6 @@ const add = "Add";
 const settingsName = "Settings";
 const matchesName = "Matches";
 import AddStack from "./AddStack";
-import LoginScreen from "./screens/components/loging/LoginScreen";
-import LoginNavigation from "./screens/components/loging/LoginNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -65,7 +64,7 @@ function AdminNav() {
         }}
       />
       <Tab.Screen name="Add" component={AddStack} />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={matchesName}
         component={Matches}
         options={{
@@ -79,7 +78,7 @@ function AdminNav() {
             fontWeight: "bold",
           },
         }}
-      />
+      /> */}
       <Tab.Screen
         name={settingsName}
         component={Settings}

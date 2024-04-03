@@ -19,7 +19,6 @@ import Toast from "react-native-toast-message";
 
 export default function GetGroupScreen({ navigation }) {
   const { data: groups, isLoading } = useGetGroups();
-  console.log("data", groups);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredGroups, setFilteredGroups] = useState([]);

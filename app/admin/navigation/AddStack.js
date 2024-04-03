@@ -24,6 +24,7 @@ import CreateNewUser from "./screens/components/users/CreateNewUser";
 import GetUsersScreen from "./screens/addScreens/GetUsers";
 import GetMatches from "./screens/addScreens/GetMatches";
 import CreateNewMatch from "./screens/components/match/CreateNewMatch";
+import MatchDetailsScreen from "./screens/components/match/MatchDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -342,6 +343,30 @@ const AddStack = () => {
         options={({ navigation }) => ({
           headerShown: true,
           headerTitle: "League Details",
+          headerStyle: {
+            backgroundColor: "#64748b",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+          ),
+          headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="MatchDetailsScreen"
+        component={MatchDetailsScreen}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerTitle: "Match Details",
           headerStyle: {
             backgroundColor: "#64748b",
           },

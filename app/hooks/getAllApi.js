@@ -60,6 +60,19 @@ export const useGetLeagueById = (leagueId) => {
     enabled: !!leagueId,
   });
 };
+export const useGetMatchById = (matchId) => {
+  const query = useQuery({
+    queryKey: ['Match', matchId],
+    queryFn: () => axios.get(`${API}/matches/get-match/${matchId}`).then((res) => res.data),
+    enabled: !!matchId,
+  });
+
+  const refetch = async () => {
+    await query.refetch();
+  };
+
+  return { ...query, refetch }; 
+};
 
 
 

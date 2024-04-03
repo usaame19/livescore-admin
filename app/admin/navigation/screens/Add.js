@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
-// Import useNavigation for navigation without passing props
 import { useNavigation } from '@react-navigation/native';
 
 const Add = () => {

@@ -138,14 +138,6 @@ const CreateNewTeam = () => {
         value={teamName}
         onChangeText={setTeamName}
       />
-
-      {/* League Picker */}
-      {/* <Picker selectedValue={selectedLeagueId} onValueChange={onLeagueChange}>
-        <Picker.Item label="Select a League" value="" />
-        {leagues.map((league) => (
-          <Picker.Item key={league.id} label={league.name} value={league.id} />
-        ))}
-      </Picker> */}
       <SelectList
         setSelected={setSelectedLeagueId}
         data={LeagueOptions}

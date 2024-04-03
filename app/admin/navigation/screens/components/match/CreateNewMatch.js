@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,23 +11,30 @@ import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
-import { useGetTeams } from "../../../../../hooks/getAllApi";
+import { useGetLeagues, useGetTeams } from "../../../../../hooks/getAllApi";
 import { API } from "../../../../../lib/config";
+import { SelectList } from "react-native-dropdown-select-list";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const API_URL = `${API}/matches/create-match`;
-
-export default function CreateNewMatch() {
+const CreateNewMatch = () => {
+  const [leagueId, setLeagueId] = useState("");
   const [homeId, setHomeId] = useState("");
   const [awayId, setAwayId] = useState("");
-  const [leagueId, setLeagueId] = useState("");
-  const [dateTime, setDateTime] = useState("");
+  const [dateTime, setDateTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const { data: teams, isLoading: loadingTeams } = useGetTeams();
+  const { data: leagues, isLoading: loadingLeagues } = useGetLeagues();
+  const { data: teams, isLoading: loadingTeams } = useGetTeams(); // Assuming this hook fetches all teams
+  const filteredTeams = teams?.filter(team => team.leagueId === leagueId);
+
   const queryClient = useQueryClient();
   const navigation = useNavigation();
 
+  const LeagueOptions = leagues?.map(league => ({ key: league.id, value: league.name })) || [];
+  const TeamOptions = filteredTeams?.map(team => ({ key: team.id, value: team.name })) || [];
+
   const handleSubmit = async () => {
-    if (!homeId || !awayId || !leagueId || !dateTime) {
+    if (!homeId || !awayId || !leagueId) {
       Toast.show({
         type: "error",
         text1: "Validation Error",
@@ -40,25 +47,17 @@ export default function CreateNewMatch() {
       homeId,
       awayId,
       leagueId,
-      dateTime,
+      dateTime: dateTime.toISOString(),
     };
 
     try {
-      await axios.post(API_URL, matchData);
+      await axios.post(`${API}/matches/create-match`, matchData);
       queryClient.invalidateQueries({ queryKey: ["Matches"] });
 
-      // Reset form
-      setHomeId("");
-      setAwayId("");
-      setLeagueId("");
-      setDateTime("");
-
-      navigation.navigate("AddMatch");
-
+      navigation.goBack();
       Toast.show({
         type: "success",
         text1: "Match created successfully",
-        text2: "Match has been created.",
       });
     } catch (error) {
       Toast.show({
@@ -69,7 +68,7 @@ export default function CreateNewMatch() {
     }
   };
 
-  if (loadingTeams) {
+  if (loadingLeagues || loadingTeams) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -77,53 +76,89 @@ export default function CreateNewMatch() {
     );
   }
 
+  const onChangeDateTime = (event, selectedDate) => {
+    const currentDate = selectedDate || dateTime;
+    setShowDatePicker(false);
+    setDateTime(currentDate);
+  };
+
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Home Team ID"
-        value={homeId}
-        onChangeText={setHomeId}
+      <SelectList
+        setSelected={setLeagueId}
+        data={LeagueOptions}
+        boxStyles={styles.selectList}
+        placeholder="Select a League"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Away Team ID"
-        value={awayId}
-        onChangeText={setAwayId}
+
+      <SelectList
+        setSelected={setHomeId}
+        data={TeamOptions}
+        boxStyles={styles.selectList}
+        placeholder="Select Home Team"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="League ID"
-        value={leagueId}
-        onChangeText={setLeagueId}
+
+      <SelectList
+        setSelected={setAwayId}
+        data={TeamOptions}
+        boxStyles={styles.selectList}
+        placeholder="Select Away Team"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Date and Time (YYYY-MM-DDTHH:MM:SS)"
-        value={dateTime}
-        onChangeText={setDateTime}
-      />
+
+      <TouchableOpacity style={styles.datePickerButton} onPress={() => setShowDatePicker(true)}>
+        <Text style={styles.datePickerButtonText}>Select Date and Time</Text>
+      </TouchableOpacity>
+
+      {showDatePicker && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={dateTime}
+          mode="datetime"
+          is24Hour={true}
+          display="default"
+          onChange={onChangeDateTime}
+        />
+      )}
+
+      <Text style={styles.dateText}>{`Selected: ${dateTime.toLocaleString()}`}</Text>
+
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Create New Match</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
+
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
     backgroundColor: "#fff",
   },
-  input: {
-    height: 50,
-    borderColor: "#007bff",
-    borderWidth: 2,
+  selectList: {
     marginBottom: 20,
-    paddingLeft: 15,
+    borderWidth: 1,
+    borderColor: "#007bff",
+    borderRadius: 5,
+    padding: 10,
+  },
+  datePickerButton: {
+    backgroundColor: "#007bff",
+    padding: 12,
     borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  datePickerButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  dateText: {
     fontSize: 16,
-    color: "#333",
+    color: "#555",
+    marginBottom: 20,
+    alignSelf: "center",
   },
   submitButton: {
     backgroundColor: "#28a745",
@@ -142,3 +177,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default CreateNewMatch

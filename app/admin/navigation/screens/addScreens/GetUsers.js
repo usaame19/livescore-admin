@@ -19,7 +19,6 @@ import Toast from "react-native-toast-message";
 
 export default function GetUsersScreen({ navigation }) {
   const { data: users, isLoading } = useGetUsers();
-  console.log("data", users);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);

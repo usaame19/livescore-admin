@@ -68,8 +68,7 @@ const LoginScreen = () => {
     }
   
     const userData = { email, password };
-    axios.post(`${API}/users/login-user`, userData,
-    console.log("post call passed"), {
+    axios.post(`${API}/users/login-user`, userData, {
       timeout: 5000
     }
     
